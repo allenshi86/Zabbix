@@ -36,11 +36,13 @@ def snmpdata():
         f1 = os.popen("snmpwalk -v 2c -c momo ARUBA_IP %s%s | awk -F ':' '{print $4}'" %(num_oid_aruba,ssid_aruba[i]))
         num_a = f1.read().splitlines()
         num1 = int(num_a[0])
+        f1.close()
         if i in ssid_cisco.keys():
             f2 = os.popen("snmpwalk -v 2c -c momo CISCO_IP %s | awk -F ':' '{print $4}'" %ssid_cisco[i])
             num_c = f2.read().splitlines()
             num2 = int(num_c[0])
             num_all = num1 + num2
+            f2.close()
             os.system("/usr/bin/zabbix_sender -vv -z ZABBIX_SERVER -p 10051 -s wlc-ssid-monitor -k count.[%s] -o %s" %(i,num_all))
         else:
             os.system("/usr/bin/zabbix_sender -vv -z ZABBIX_SERVER -p 10051 -s wlc-ssid-monitor -k count.[%s] -o %s" %(i,num1))
@@ -50,6 +52,7 @@ def snmpdata1():
         f = os.popen("snmpwalk -v 2c -c momo CISCO_IP %s | awk -F ':' '{print $4}'" %others_cisco[i])
         num_list = f.read().splitlines()
         num = int(num_list[0])
+        f.close()
         os.system("/usr/bin/zabbix_sender -vv -z ZABBIX_SERVER -p 10051 -s wlc-ssid-monitor -k count.[%s] -o %s" %(i,num))
         
 
