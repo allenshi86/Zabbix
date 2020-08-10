@@ -19,7 +19,6 @@ def  get_ap_dic_fun(dict):
         ap_name = ap_names.split('"')[1]
         ap_index = (ap_names.split('=')[0]).split('1.4.1.3')[1].rstrip()
         dict[ap_name] = ap_index
-
     return dict
 
 def remove_disabled_ap():
@@ -48,8 +47,6 @@ def check_double_5G(dict_ap):
         if value == 1:       #值为1，已启用双5G.值为0，未启用.
             double_5G.append(ap_name)
 
-
-
 def tapper_clients_ap(dict_ap):
     for ap_name in dict_ap.keys():
         radio0_datas = os.popen("snmpwalk -v 2c -c hello 172.16.202.10 %s%s.2" % (prefix_radio_clients_oid, dict_ap[ap_name])).read()
@@ -59,7 +56,6 @@ def tapper_clients_ap(dict_ap):
             clients_radio0 = int(radio0_datas.split(':')[-1]) / 2
         else:
             clients_radio0 = int(radio0_datas.split(':')[-1])
-
         clients_sum = clients_radio0 + clients_radio1
         os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s aruba-bj-ac-10 -k clients.[%s] -o %s" %(ap_name,clients_sum))
 
