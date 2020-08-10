@@ -56,7 +56,10 @@ def tapper_clients_ap(dict_ap):
             clients_radio0 = int(radio0_datas.split(':')[-1]) / 2
         else:
             clients_radio0 = int(radio0_datas.split(':')[-1])
+     
         clients_sum = clients_radio0 + clients_radio1
+        os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s office-aruba-bj-t2-11-ac-10 -k clients.radio0.[%s] -o %s" % (ap_name, clients_radio0))
+        os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s office-aruba-bj-t2-11-ac-10 -k clients.radio1.[%s] -o %s" % (ap_name, clients_radio1))
         os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s aruba-bj-ac-10 -k clients.[%s] -o %s" %(ap_name,clients_sum))
 
 if __name__ == '__main__':
