@@ -29,21 +29,21 @@ def remove_disabled_ap():
 def tapper_channel_util(dict_ap):
     for ap_name in dict_ap.keys():
         try:
-            snmpwalk_ap_radio0 = os.popen("snmpwalk  -v 2c -c momo 172.16.202.10 %s%s.2" % (prefix_channel_oid, dict_ap[ap_name]))
-            snmpwalk_ap_radio1 = os.popen("snmpwalk  -v 2c -c momo 172.16.202.10 %s%s.1" % (prefix_channel_oid, dict_ap[ap_name]))
+            snmpwalk_ap_radio0 = os.popen("snmpwalk  -v 2c -c hello 172.16.202.10 %s%s.2" % (prefix_channel_oid, dict_ap[ap_name]))
+            snmpwalk_ap_radio1 = os.popen("snmpwalk  -v 2c -c hello 172.16.202.10 %s%s.1" % (prefix_channel_oid, dict_ap[ap_name]))
             channel0_data_source = snmpwalk_ap_radio0.read()
             channel1_data_source = snmpwalk_ap_radio1.read()
             if ap_name != 'AP-01' and ap_name != 'T2-F19-AP04' and ap_name != 'T1-F16-AP30':
                 radio0_util_percent = int(channel0_data_source.split(':')[-1])
                 radio1_util_percent = int(channel1_data_source.split(':')[-1])
-                os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s office-aruba-bj-t2-11-ac-10 -k uti_radio0.[%s] -o %s" %(ap_name, radio0_util_percent))
-                os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s office-aruba-bj-t2-11-ac-10 -k uti_radio1.[%s] -o %s" %(ap_name, radio1_util_percent))
+                os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s aruba-bj-ac-10 -k uti_radio0.[%s] -o %s" %(ap_name, radio0_util_percent))
+                os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s aruba-bj-ac-10 -k uti_radio1.[%s] -o %s" %(ap_name, radio1_util_percent))
         except Exception as e:
             print e
 
 def check_double_5G(dict_ap):
     for ap_name in dict_ap.keys():
-        datas = os.popen("snmpwalk -v 2c -c momo 172.16.202.10 %s%s" % (prefix_double5G_oid, dict_ap[ap_name])).read()
+        datas = os.popen("snmpwalk -v 2c -c hello 172.16.202.10 %s%s" % (prefix_double5G_oid, dict_ap[ap_name])).read()
         value = int(datas.split(':')[-1])
         if value == 1:       #值为1，已启用双5G.值为0，未启用.
             double_5G.append(ap_name)
@@ -52,8 +52,8 @@ def check_double_5G(dict_ap):
 
 def tapper_clients_ap(dict_ap):
     for ap_name in dict_ap.keys():
-        radio0_datas = os.popen("snmpwalk -v 2c -c momo 172.16.202.10 %s%s.2" % (prefix_radio_clients_oid, dict_ap[ap_name])).read()
-        radio1_datas = os.popen("snmpwalk -v 2c -c momo 172.16.202.10 %s%s.1" % (prefix_radio_clients_oid, dict_ap[ap_name])).read()
+        radio0_datas = os.popen("snmpwalk -v 2c -c hello 172.16.202.10 %s%s.2" % (prefix_radio_clients_oid, dict_ap[ap_name])).read()
+        radio1_datas = os.popen("snmpwalk -v 2c -c hello 172.16.202.10 %s%s.1" % (prefix_radio_clients_oid, dict_ap[ap_name])).read()
         clients_radio1 = int(radio1_datas.split(':')[-1])
         if ap_name in double_5G:
             clients_radio0 = int(radio0_datas.split(':')[-1]) / 2
@@ -61,7 +61,7 @@ def tapper_clients_ap(dict_ap):
             clients_radio0 = int(radio0_datas.split(':')[-1])
 
         clients_sum = clients_radio0 + clients_radio1
-        os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s office-aruba-bj-t2-11-ac-10 -k clients.[%s] -o %s" %(ap_name,clients_sum))
+        os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s aruba-bj-ac-10 -k clients.[%s] -o %s" %(ap_name,clients_sum))
 
 if __name__ == '__main__':
     get_ap_dic_fun(ap_names_dict)
