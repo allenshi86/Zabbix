@@ -51,3 +51,5 @@ if __name__ == '__main__':
     snmpwalk_ap_datas.close()
     tapper_channel_util(ap_names_dict)
     tapper_clients_ap(ap_names_dict)
+    
+    
