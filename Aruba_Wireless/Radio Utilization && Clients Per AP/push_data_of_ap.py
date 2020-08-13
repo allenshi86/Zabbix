@@ -31,7 +31,7 @@ def remove_disabled_ap(dict_ap):
             dict_ap.pop(ap_name)
             ap_disabled_list.append(ap_name)
 
-def tapper_channel_util(dict_ap):
+def trapper_channel_util(dict_ap):
     for ap_name in dict_ap.keys():
         try:
             snmpwalk_ap_radio0 = os.popen("snmpwalk  -v 2c -c momo 172.16.202.10 %s%s.2" % (prefix_channel_oid, dict_ap[ap_name]))
@@ -54,7 +54,7 @@ def check_double_5G(dict_ap):
         if value == 1:       #值为1，已启用双5G.值为0，未启用.
             double_5G.append(ap_name)
 
-def tapper_clients_ap(dict_ap):
+def trapper_clients_ap(dict_ap):
     for ap_name in dict_ap.keys():
         radio0_datas = os.popen("snmpwalk -v 2c -c momo 172.16.202.10 %s%s.2" % (prefix_radio_clients_oid, dict_ap[ap_name])).read()
         radio1_datas = os.popen("snmpwalk -v 2c -c momo 172.16.202.10 %s%s.1" % (prefix_radio_clients_oid, dict_ap[ap_name])).read()
@@ -73,9 +73,9 @@ if __name__ == '__main__':
     get_ap_dic_fun(ap_names_dict)
     snmpwalk_ap_datas.close()
     remove_disabled_ap(ap_names_dict)
-    tapper_channel_util(ap_names_dict)
+    trapper_channel_util(ap_names_dict)
     check_double_5G(ap_names_dict)
-    tapper_clients_ap(ap_names_dict)
+    trapper_clients_ap(ap_names_dict)
 
 
     
