@@ -7,6 +7,7 @@ import os
 prefix_ap_oid = '1.3.6.1.4.1.14179.2.2.1.1.3'
 prefix_radio_clients_oid = '1.3.6.1.4.1.14179.2.2.2.1.15'
 prefix_channel_oid = '1.3.6.1.4.1.14179.2.2.13.1.3'
+prefix_ap_admin_status_oid = '1.3.6.1.4.1.9.9.513.1.1.1.1.38'
 ap_names_dict = {}   # key存储AP名字，值存储AP索引
 snmpwalk_ap_datas = os.popen("snmpwalk -v 2c -c momo 172.16.201.3 %s" % prefix_ap_oid)
 
@@ -18,6 +19,12 @@ def get_ap_dic_fun(dict):
         dict[ap_name] = ap_index
 
     return dict
+
+def trapper_ap_admin_status(dict_ap):
+    for ap_name in dict_ap.keys():
+        snmpwalk_admin_status = os.popen("snmpwalk  -v 2c -c momo 172.16.201.3 %s%s" % (prefix_ap_admin_status_oid, dict_ap[ap_name]))
+        ap_status = int(snmpwalk_admin_status.read().split(':')[-1])
+        os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s office-wlc-bj-t2-11-ac-3 -k status.[%s] -o %s" % (ap_name, ap_status))
 
 def trapper_channel_util(dict_ap):
     for ap_name in dict_ap.keys():
@@ -51,5 +58,8 @@ if __name__ == '__main__':
     snmpwalk_ap_datas.close()
     trapper_channel_util(ap_names_dict)
     trapper_clients_ap(ap_names_dict)
+    trapper_ap_admin_status(ap_names_dict)
+    
+    
     
     
