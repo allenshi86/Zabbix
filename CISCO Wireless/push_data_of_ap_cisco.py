@@ -19,7 +19,7 @@ def get_ap_dic_fun(dict):
 
     return dict
 
-def tapper_channel_util(dict_ap):
+def trapper_channel_util(dict_ap):
     for ap_name in dict_ap.keys():
         try:
             snmpwalk_ap_radio0 = os.popen("snmpwalk  -v 2c -c momo 172.16.201.3 %s%s.0" % (prefix_channel_oid, dict_ap[ap_name]))
@@ -35,7 +35,7 @@ def tapper_channel_util(dict_ap):
         except Exception as e:
             print e
 
-def tapper_clients_ap(dict_ap):
+def trapper_clients_ap(dict_ap):
     for ap_name in dict_ap.keys():
         radio0_datas = os.popen("snmpwalk -v 2c -c momo 172.16.201.3 %s%s.2" % (prefix_radio_clients_oid, dict_ap[ap_name])).read()
         radio1_datas = os.popen("snmpwalk -v 2c -c momo 172.16.201.3 %s%s.1" % (prefix_radio_clients_oid, dict_ap[ap_name])).read()
@@ -49,7 +49,7 @@ def tapper_clients_ap(dict_ap):
 if __name__ == '__main__':
     get_ap_dic_fun(ap_names_dict)
     snmpwalk_ap_datas.close()
-    tapper_channel_util(ap_names_dict)
-    tapper_clients_ap(ap_names_dict)
+    trapper_channel_util(ap_names_dict)
+    trapper_clients_ap(ap_names_dict)
     
     
