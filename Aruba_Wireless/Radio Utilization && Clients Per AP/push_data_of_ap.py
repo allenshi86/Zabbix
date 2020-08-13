@@ -23,6 +23,12 @@ def  get_ap_dic_fun(dict):
 
     return dict
 
+def trapper_ap_status(dict_ap): #监控AP状态，掉线告警
+    for ap_name in dict_ap.keys():
+        snmpwalk_status_datas = os.popen("snmpwalk -v 2c -c momo 172.16.202.10 %s%s" % (prefix_ap_status_oid, dict_ap[ap_name]))
+        ap_status = int(snmpwalk_status_datas.read().split(':')[-1])
+        os.system("/bin/zabbix_sender -z 172.16.7.20 -vv -s office-aruba-bj-t2-11-ac-10 -k status.[%s] -o %s" % (ap_name, ap_status))
+
 def remove_disabled_ap(dict_ap):
     for ap_name in dict_ap.keys():
         snmpwalk_status_datas = os.popen("snmpwalk -v 2c -c momo 172.16.202.10 %s%s" % (prefix_ap_status_oid, dict_ap[ap_name]))
@@ -72,6 +78,7 @@ def trapper_clients_ap(dict_ap):
 if __name__ == '__main__':
     get_ap_dic_fun(ap_names_dict)
     snmpwalk_ap_datas.close()
+    trapper_ap_status(ap_names_dict)
     remove_disabled_ap(ap_names_dict)
     trapper_channel_util(ap_names_dict)
     check_double_5G(ap_names_dict)
