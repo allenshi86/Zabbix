@@ -33,12 +33,12 @@ others_cisco = {'Audit': '.1.3.6.1.4.1.14179.2.1.1.1.38.7',
               
 def snmpdata():
     for i in ssid_aruba.keys():
-        f1 = os.popen("snmpwalk -v 2c -c momo ARUBA_IP %s%s | awk -F ':' '{print $4}'" %(num_oid_aruba,ssid_aruba[i]))
+        f1 = os.popen("snmpwalk -v 2c -c mx ARUBA_IP %s%s | awk -F ':' '{print $4}'" %(num_oid_aruba,ssid_aruba[i]))
         num_a = f1.read().splitlines()
         num1 = int(num_a[0])
         f1.close()
         if i in ssid_cisco.keys():
-            f2 = os.popen("snmpwalk -v 2c -c momo CISCO_IP %s | awk -F ':' '{print $4}'" %ssid_cisco[i])
+            f2 = os.popen("snmpwalk -v 2c -c mx CISCO_IP %s | awk -F ':' '{print $4}'" %ssid_cisco[i])
             num_c = f2.read().splitlines()
             num2 = int(num_c[0])
             num_all = num1 + num2
@@ -49,7 +49,7 @@ def snmpdata():
 
 def snmpdata1():    
     for i in others_cisco.keys():
-        f = os.popen("snmpwalk -v 2c -c momo CISCO_IP %s | awk -F ':' '{print $4}'" %others_cisco[i])
+        f = os.popen("snmpwalk -v 2c -c x CISCO_IP %s | awk -F ':' '{print $4}'" %others_cisco[i])
         num_list = f.read().splitlines()
         num = int(num_list[0])
         f.close()
