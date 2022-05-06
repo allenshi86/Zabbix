@@ -7,7 +7,7 @@ import  json
 
 ap_json = {"data": []}
 
-ap_sets = os.popen("snmpwalk  -v 2c -c hello 172.16.202.10 .1.3.6.1.4.1.14823.2.2.1.5.2.1.4 | grep -i ap | awk -F ':' '{print $4}'|awk -F '\"' '{print $2}'")
+ap_sets = os.popen("snmpwalk  -v 2c -c hello 172.16.202.x .1.3.6.1.4.1.14823.2.2.1.5.2.1.4 | grep -i ap | awk -F ':' '{print $4}'|awk -F '\"' '{print $2}'")
 ap_list = ap_sets.read().splitlines()
 ap_sets.close()
 
