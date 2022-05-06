@@ -8,7 +8,7 @@ import  json
 ap_json = {"data": []}
 
 
-ap_sets = os.popen("snmpwalk  -v 2c -c commu 172.16.202.8 1.3.6.1.4.1.14823.2.2.1.5.2.1.4.1.3 | awk -F ':' '{print $4}'|awk -F '\"' '{print $2}'")
+ap_sets = os.popen("snmpwalk  -v 2c -c commu 172.16.202.x 1.3.6.1.4.1.14823.2.2.1.5.2.1.4.1.3 | awk -F ':' '{print $4}'|awk -F '\"' '{print $2}'")
 ap_list = ap_sets.read().splitlines()
 ap_sets.close()
 
@@ -20,5 +20,5 @@ for ap in ap_list:
 
 push_data = json.dumps(ap_json)
 print push_data
-#"/bin/zabbix_sender -z 172.16.7.20 -p 10051 -s office-aruba-bj-t2-11-MM-10 -k ap.discovery -o '%s'"  %push_data
-os.system("/bin/zabbix_sender -z 172.16.7.20 -p 10051 -s office-aruba-bj-t2-11-MM-10 -k ap.discovery -o '%s'"  %push_data)
+#"/bin/zabbix_sender -z 172.16.7.x -p 10051 -s office-aruba-bj-t2-11-MM-10 -k ap.discovery -o '%s'"  %push_data
+os.system("/bin/zabbix_sender -z 172.16.7.x -p 10051 -s office-aruba-bj-t2-11-MM-10 -k ap.discovery -o '%s'"  %push_data)
