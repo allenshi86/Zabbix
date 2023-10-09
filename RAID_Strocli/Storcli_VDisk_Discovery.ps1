@@ -1,5 +1,5 @@
 #author:shizhenning
-#----20231009V001----#
+#----20231009V003----#
 
 $Path_tool =  "C:\Program Files\MegaCli\"
 cd $Path_tool
